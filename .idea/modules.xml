@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../CRUD_API/.idea/CRUD_API.iml" filepath="$PROJECT_DIR$/../CRUD_API/.idea/CRUD_API.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Geschenkfinder.iml" filepath="$PROJECT_DIR$/.idea/Geschenkfinder.iml" />
     </modules>
   </component>

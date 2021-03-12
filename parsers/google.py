@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 
 def parse_html(fh):
     garbage = ('Y\nYouTube', 'Männlich', 'Weiblich')
-    arr = []
+    set_categories = set()
     with open(fh, 'r', encoding='utf-8') as f:
         soup = BeautifulSoup(f.read(), 'lxml')
         categories = soup.find('ul')
         for cat in categories.find_all('li'):
             if cat.text.strip() not in garbage:
-                arr.append(cat.text.strip())
-    return arr
+                set_categories.add(cat.text.strip())
+    return set_categories
 
 
 if __name__ == '__main__':
