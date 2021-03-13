@@ -1,20 +1,20 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div class="py-10 text-7xl font-bold text-center mb-24 text-white">
-    Relaxdays Geschenke Finder
-</div>
-<div class="mx-12 mb-20 text-xl font-semibold text-white">
-    <div class=" py-10">
-        Nutze Google Daten um das perfekte Geschenk auf Relaxdays zu finden:
+    <div class="py-10 text-7xl font-bold text-center mb-24 text-white">
+        Relaxdays Geschenke Finder
     </div>
-    <div class=" py-10 text-l text-white">
+    <div class="mx-12 mb-20 text-xl font-semibold text-white">
+        <div class=" py-10">
+            Nutze Google Daten um das perfekte Geschenk auf Relaxdays zu finden:
+        </div>
+        <div class=" py-10 text-l text-white">
 
-        Einfach der Anleitung folgen und die Daten der zu beschenkenden Person, wahlweise kombiniert mit den eigenen Daten hochladen
-        und ein Geschenk finden das so gut passt wie Google dich kennt
+            Einfach der Anleitung folgen und die Daten der zu beschenkenden Person, wahlweise kombiniert mit den eigenen Daten hochladen
+            und ein Geschenk finden das so gut passt wie Google dich kennt
+        </div>
+        <a href="{{ url_for('upload') }}"
+           class="w-24 mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+            Weiter
+        </a>
     </div>
-    <a href="/upload"
-       class="w-24 mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
-        Weiter
-    </a>
-</div>
 {% endblock %}

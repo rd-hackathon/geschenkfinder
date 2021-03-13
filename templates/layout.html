@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Geschenkefinder</title>
-    <link rel="stylesheet" href="./css/tasks.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=MutationObserver%2CArray.from%2CArray.prototype.forEach%2CMap%2CSet%2CArray.prototype.includes%2CString.prototype.includes%2CPromise%2CNodeList.prototype.forEach%2CObject.values%2CReflect%2CReflect.set"></script>
     <script src="https://cdn.jsdelivr.net/npm/proxy-polyfill@0.3.0/proxy.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.1/dist/alpine.min.js" defer></script>
@@ -14,13 +13,20 @@
 </head>
 <body>
 <main>
-    <div class="py-12">
+    <div class="py-5">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-green-500 to-blue-500 overflow-hidden shadow-xl sm:rounded-r-lg p-6 ">
+            <div class="bg-gradient-to-r from-green-500 to-blue-500 overflow-hidden shadow-xl sm:rounded-r-lg p-6">
                 {% block content %}{% endblock %}
             </div>
         </div>
     </div>
 </main>
+<footer>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-r from-green-500 to-blue-500 shadow-xl sm:rounded-r-lg">
+                <div class="mx-12 mb-20 text-l font-semibold text-white">Eine Webapp von Benedikt Wismeth (CC-VOL1-??), Julius S. Hepp (CC-VOL1-68), Felix Loos(CC-VOL1-??) - Danke fürs Ausprobieren ♥</div>
+            </div>
+        </div>
+</footer>
 </body>
 </html>

@@ -32,13 +32,19 @@ def get_db():
 def start():
     return render_template('index.html')
 
+
 @app.route('/upload', methods=['GET', 'POST'])
-def uplaod():
+def upload():
     if request.method == 'GET':
         return render_template('upload.html')
     elif request.method == 'POST':
         f = request.form.to_dict()
-        files = request.files.getlist("files[]")
+        files = [request.files.get('file1')]
+        print(type(request.files.get('file1')))
+        if request.files.get('file2'):
+            files.append(request.files.get('file2'))
+        print(f)
+        print(files)
         if len(files) <= 0:
             return "Keine Datei hochgeladen!"
         f['files'] = []
@@ -60,26 +66,22 @@ def uplaod():
         f['uuid'] = uuid4().hex
         with open(os.path.join(app.config['SESSION_FOLDER'], f['uuid']), 'w') as fh:
             json.dump(f, fh)
-        return redirect(url_for('selection', uuid=f['uuid']))
+        return redirect(url_for('swipe', uuid=f['uuid']))
 
-@app.route('/swipe', methods=['GET'])
-def swipe():
-    return render_template('swipe.html')
 
-@app.route('/result', methods=['GET'])
-def result():
-    return render_template('result.html')
+@app.route('/<uuid>/result', methods=['GET'])
+def result(uuid):
+    return render_template('results.html')
 
 
 @app.route('/<uuid>', methods=['GET'])
-def selection(uuid):
-    # todo: Merkliste übermitteln
-    try:
-        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
-            f = json.load(fh)
-    except FileNotFoundError:
-        return {'success': False, 'reason': "Session existiert nicht"}
-    return f  # todo: return template/overview instead
+def swipe(uuid):
+    # try:
+    #    with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+    #        f = json.load(fh)
+    # except FileNotFoundError:
+    #    return {'success': False, 'reason': "Session existiert nicht"}
+    return render_template('swipe.html')
 
 
 # dies ist der Endpunkt, der über Javascript für neue Daten abgerufen werden muss
@@ -131,7 +133,7 @@ def get_next(uuid):
     with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'w') as fh:
         json.dump(f, fh)
     if not_found_count > len(f['categories']):
-        return {"session_complete": True, "liked_items": {}}  # todo: get it!
+        return {"session_complete": True, "liked_items": f['liked_items']}
     return returndict
 
 
@@ -166,8 +168,6 @@ def get_liked(uuid):
         return {"session_complete": True, "liked_items": f['liked_items']}
     except:  # i am sure this is fine...
         return {'success': False, 'reason': 'Nothing here yet', 'message': sys.exc_info()[0]}
-
-
 
 
 @app.teardown_appcontext

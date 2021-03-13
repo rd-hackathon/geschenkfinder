@@ -1,27 +1,37 @@
 {% extends 'layout.html' %}
 {% block content %}
-<div x-data="">
-    <div class= "py-10 text-7xl font-bold text-center mb-10 text-white">
-                   Die Top 3 besten Geschenke:</div>
-    <div class="text-center text-white font-semibold text-xl flex flex-row justify-between px-12">
-        <div>
-            <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-        <%- include('components/buybutton',{href: '' }); %>
+    <div x-data="">
+        <div class="py-10 text-7xl font-bold text-center mb-10 text-white">
+            Die Top 3 besten Geschenke:
         </div>
+        <div class="text-center text-white font-semibold text-xl flex flex-row justify-between px-12">
+            <div>
+                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
+                <a href="#"
+                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+                    Kaufen
+                </a>
+            </div>
 
-        <div>
-            <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-            <%- include('components/buybutton',{href: ''}); %>
-        </div>
-        <div>
-            <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-            <%- include('components/buybutton',{href: ''}); %>
-        </div>
+            <div>
+                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
+                <a href="#"
+                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+                    Kaufen
+                </a>
+            </div>
+            <div>
+                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
+                <a href="#"
+                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+                    Kaufen
+                </a>
+            </div>
 
+        </div>
+        <a href="{{ url_for('upload') }}"
+           class="w-40 mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+            Nochmal versuchen
+        </a>
     </div>
-    <a href="/upload"
-       class="w-40 mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
-        Nochmal versuchen
-    </a>
-</div>
 {% endblock %}
