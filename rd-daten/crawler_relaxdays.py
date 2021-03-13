@@ -20,8 +20,14 @@ def get_items(category: str):
     r = sess.get(url)
     soup = BeautifulSoup(r.text, 'lxml')
     try:
-        items_html = soup.find('ol', {'class': 'products list items product-items'}).find_all('li')
-        c.execute('CREATE TABLE IF NOT EXISTS "{}" (id NUMERIC UNIQUE, name TEXT, price NUMERIC, url TEXT, image TEXT)'.format(category))
+        warning = soup.find('div', {'class': 'message notice'})
+        if warning is None:
+            items_html = soup.find('ol', {'class': 'products list items product-items'}).find_all('li')
+            c.execute('CREATE TABLE IF NOT EXISTS "{}" (id NUMERIC UNIQUE, name TEXT, price NUMERIC, url TEXT, image TEXT)'.format(category))
+        else:
+            print("{} hat eine Warning: {}".format(category, warning.text))
+            broken.append(category)
+            return
     except AttributeError:
         print("{} hat keine Einträge.".format(category))
         broken.append(category)
@@ -31,7 +37,7 @@ def get_items(category: str):
             'url': item.find('a', {'class': 'product-item-link'})['href'],
             'image': item.find('img')['src'],
             'name': item.find('a', {'class': 'product-item-link'}).text,
-            'price': item.find('span', {'class': 'price'}).text.replace('\xa0€', '').replace(',','.')
+            'price': item.find('span', {'class': 'price'}).text.replace('\xa0€', '').replace(',', '.')
         }
         c.execute("INSERT INTO '{}' (id, name, price, url, image) VALUES (?, ?, ?, ?, ?);".format(category), (x, i['name'], str(i['price']), i['url'], i['image']))
     db.commit()
@@ -39,17 +45,18 @@ def get_items(category: str):
 
 
 if __name__ == '__main__':
-    with open('working.txt', 'r') as f:
+    with open('bereinigte_kategorien.txt', 'r') as f:
         lines = f.readlines()
 
     for l in lines:
         print('Suche: {}'.format(l.strip()))
         get_items(l.strip())
 
-    #with open('broken.txt', 'w') as f:
-    #    for cat in broken:
-    #        f.write("%s\n" % cat)
-    #with open('working.txt', 'w') as f:
-    #    for cat in working:
-    #        f.write("%s\n" % cat)
+
+    with open('broken.txt', 'w') as f:
+        for cat in broken:
+            f.write("%s\n" % cat)
+    with open('working.txt', 'w') as f:
+        for cat in working:
+            f.write("%s\n" % cat)
     c.close()

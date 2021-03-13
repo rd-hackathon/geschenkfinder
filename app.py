@@ -8,7 +8,7 @@ from uuid import uuid4
 
 from werkzeug.utils import secure_filename
 
-from parsers.google import parse_html
+from parsers.google import parse_html, useable
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # wir nehmen an, dass die HTML-Datei <16MB ist
@@ -22,7 +22,7 @@ os.makedirs(app.config['SESSION_FOLDER'], exist_ok=True)
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect("rd-daten/daten.db")
+        db = g._database = sqlite3.connect("rd-daten/daten_old_and_fuzzier.db")
         db.row_factory = sqlite3.Row
     return db
 
@@ -46,7 +46,7 @@ def upload():
         print(f)
         print(files)
         if len(files) <= 0:
-            return "Keine Datei hochgeladen!"
+            return "Keine Datei hochgeladen!<br><a href=" + url_for('upload') + ">Geh zurück zum Upload und probier es nochmal?</a>"
         f['files'] = []
         categories = set()
         for html in files:
@@ -59,9 +59,10 @@ def upload():
                 else:
                     categories = categories.intersection(parse_html(path))
             except AttributeError:
-                return "Dies war(en) nicht die richtige(n) Datei(en)."
+                return "Dies war(en) nicht die richtige(n) Datei(en).<br><a href=" + url_for('upload') + ">Geh zurück zum Upload und probier es nochmal?</a>"
         if len(categories) == 0:
-            return "Konnte keine Kategorie in der HTML-Datei finden."
+            return "Konnte keine Kategorie in der HTML-Datei finden. Entweder ist das nicht die Datei, die erwartet wurde oder in der Datei sind leider keine kompatiblen Kategorien :(<br><a href=" + url_for(
+                'upload') + ">Geh zurück zum Upload und probier es nochmal?</a><br><br><b>Kompatible Kategorien sind:</b><br>" + '<br>'.join(useable)
         f['categories'] = list(categories)
         f['uuid'] = uuid4().hex
         with open(os.path.join(app.config['SESSION_FOLDER'], f['uuid']), 'w') as fh:
@@ -76,11 +77,11 @@ def result(uuid):
 
 @app.route('/<uuid>', methods=['GET'])
 def swipe(uuid):
-    # try:
-    #    with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
-    #        f = json.load(fh)
-    # except FileNotFoundError:
-    #    return {'success': False, 'reason': "Session existiert nicht"}
+    try:
+        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+            f = json.load(fh)
+    except FileNotFoundError:
+        return {'success': False, 'reason': "Session existiert nicht"}
     return render_template('swipe.html')
 
 
@@ -168,6 +169,15 @@ def get_liked(uuid):
         return {"success": True, "liked_items": f['liked_items']}
     except:  # i am sure this is fine...
         return {'success': False, 'reason': 'Nothing here yet', 'message': sys.exc_info()[0]}
+
+
+@app.route('/<uuid>.json', methods=['GET'])
+def get_json(uuid):
+    try:
+        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+            return json.load(fh)
+    except FileNotFoundError:
+        return {'success': False, 'reason': "Session existiert nicht"}
 
 
 @app.teardown_appcontext
