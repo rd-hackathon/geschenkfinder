@@ -1,32 +1,20 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <div x-data="">
+    <div x-data="results()"
+        x-init="getResults()">
         <div class="py-10 text-7xl font-bold text-center mb-10 text-white">
             Die Top 3 besten Geschenke:
         </div>
-        <div class="text-center text-white font-semibold text-xl flex flex-row justify-between px-12">
-            <div>
-                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-                <a href="#"
-                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
-                    Kaufen
-                </a>
-            </div>
-
-            <div>
-                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-                <a href="#"
-                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
-                    Kaufen
-                </a>
-            </div>
-            <div>
-                <img class="w-auto h-auto px-4" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-                <a href="#"
-                   class="w-60 mt-10 py-4 inline-flex items-center px-20 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
-                    Kaufen
-                </a>
-            </div>
+        <div class="text-center text-white font-semibold text-xl flex flex-row justify-between px-12 flex-wrap">
+            <template x-for="result in results" :key="result">
+                <div>
+                    <img class="w-auto h-auto px-4" x-bind:src="result.image" >
+                    <div class="text-xl" x-text="result.name"></div>
+                    <div class="text-xl" x-text="result.price + '€'"></div>
+                    <a class=" mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest"
+                       x-bind:href="result.url">Zur Relaxsays Seite</a>
+                </div>
+            </template>
 
         </div>
         <a href="{{ url_for('upload') }}"
@@ -34,4 +22,22 @@
             Nochmal versuchen
         </a>
     </div>
+    <script>
+    function results(){
+        return {
+            results: [],
+            uid: '',
+            getResults(){
+                this.uid = window.location.href.split('/')[3]
+                console.log(this.uid)
+                var url = '/' + this.uid + '/liked'
+                fetch(url).then((response)=>{  return response.json();  // converting byte data to json
+                }).then(data=>{
+                    this.results = data.liked_items
+                    console.log(data)
+                });
+            }
+        }
+    }
+    </script>
 {% endblock %}

@@ -1,11 +1,77 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <div class="py-10 text-7xl font-bold text-center mb-10 text-white">
-        Wähle passende Geschenke aus:
+    <div x-data="swipe()"
+        x-init="getNext()">
+        <div class="py-10 text-7xl font-bold text-center mb-10 text-white">
+            Wähle passende Geschenke aus:
+        </div>
+        <div class="flex justify-around text-8xl text-white font-bold">
+            <button class="px-16 text-8xl  font-bold bg-gradient-to-b from-blue-400 to-green-400 hover:from-blue-700 hover:to-green-300 border-transparent  rounded-r-lg"
+            @click="disslike"
+            >-</button>
+            <div>
+                <img class="center" x-bind:src="img">
+                <div class="text-xl" x-text="name"></div>
+                <div class="text-xl" x-text="price + '€'"></div>
+                <a class=" mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest"
+                   x-bind:href="url">Zur Relaxsays Seite</a>
+            </div>
+            <button class="text-8xl px-14 font-bold  bg-gradient-to-b from-green-400 to-blue-400 hover:from-green-300 hover:to-blue-600 border-transparent  rounded-r-lg"
+            @click="like"
+            >+</button>
+        </div>
     </div>
-    <div x-data="" class="flex justify-around text-8xl text-white font-bold">
-        <button class="px-16 text-8xl  font-bold bg-gradient-to-b from-blue-400 to-green-400 hover:from-blue-700 hover:to-green-300 border-transparent  rounded-r-lg">-</button>
-        <img class="center" src="https://cdn.relaxdays.com/media/catalog/product/cache/edb9efdaeaa91af549786f6800a64891/1/0/10013215_0_3_6f43be5ebf7af6edb693a043383bf02b.jpg">
-        <button class="text-8xl px-14 font-bold  bg-gradient-to-b from-green-400 to-blue-400 hover:from-green-300 hover:to-blue-600 border-transparent  rounded-r-lg">+</button>
-    </div>
+    <script>
+    function swipe(){
+        return {
+            img: "test",
+            name: null,
+            price: null,
+            url: null,
+            uid: null,
+            liked: 0,
+            getNext(){
+                this.uid = window.location.href.split('/')[3]
+                var url = this.uid + '/next'
+                fetch(url).then((response)=>{  return response.json();  // converting byte data to json
+                }).then(data=>{
+                    this.img = data.image
+                    this.name = data.name
+                    this.price = data.price
+                    this.url = data.url
+                    console.log(data)
+                });
+            },
+            like(){
+                var url_like = this.uid + '/like'
+                fetch(url_like, {method: 'POST'}).then((response)=>{
+                    console.log(response); return response.json();  // converting byte data to json
+                }).then(data=>{
+                    if(data.success){
+                        this.liked = this.liked +1
+                        if(this.liked>=3){
+                            window.location.href = '/' + this.uid + '/result'
+                        }else{
+                            this.getNext()
+                        }
+                    }else{
+                        //maybe show error
+                    }
+                });
+            },
+            disslike(){
+                var url_like = this.uid + '/dislike'
+                fetch(url_like, {method: 'POST'}).then((response)=>{
+                    console.log(response); return response.json();  // converting byte data to json
+                }).then(data=>{
+                    if(data.success){
+                        this.getNext()
+                    }else{
+                        //maybe show error
+                    }
+                });
+            }
+        }
+    }
+    </script>
 {% endblock %}
