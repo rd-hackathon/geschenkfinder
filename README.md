@@ -1,4 +1,4 @@
-This project was created in the Relaxdays Code Challenge Vol. 1. See https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite for more information. Our participant IDs in the challenge were: CC-VOL1-68, CC-VOL1-??, CC-VOL1-??
+This project was created in the Relaxdays Code Challenge Vol. 1. See https://sites.google.com/relaxdays.de/hackathon-relaxdays/startseite for more information. Our participant IDs in the challenge were: CC-VOL1-45, CC-VOL1-55, CC-VOL1-68
 
 # Geschenke Inspirator
 
