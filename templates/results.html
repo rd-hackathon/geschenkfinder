@@ -1,4 +1,5 @@
-
+{% extends 'layout.html' %}
+{% block content %}
 <div x-data="">
     <div class= "py-10 text-7xl font-bold text-center mb-10 text-white">
                    Die Top 3 besten Geschenke:</div>
@@ -18,5 +19,9 @@
         </div>
 
     </div>
-<%- include('components/backbutton',{href: '/upload'}); %>
+    <a href="/upload"
+       class="w-40 mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest">
+        Nochmal versuchen
+    </a>
 </div>
+{% endblock %}

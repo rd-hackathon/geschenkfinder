@@ -28,9 +28,12 @@ def get_db():
 
 
 # this code is a mess, and I am sorry 🙈
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def start():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['GET', 'POST'])
+def uplaod():
     if request.method == 'GET':
         return render_template('upload.html')
     elif request.method == 'POST':
@@ -58,6 +61,14 @@ def start():
         with open(os.path.join(app.config['SESSION_FOLDER'], f['uuid']), 'w') as fh:
             json.dump(f, fh)
         return redirect(url_for('selection', uuid=f['uuid']))
+
+@app.route('/swipe', methods=['GET'])
+def swipe():
+    return render_template('swipe.html')
+
+@app.route('/result', methods=['GET'])
+def result():
+    return render_template('result.html')
 
 
 @app.route('/<uuid>', methods=['GET'])
@@ -155,6 +166,8 @@ def get_liked(uuid):
         return {"session_complete": True, "liked_items": f['liked_items']}
     except:  # i am sure this is fine...
         return {'success': False, 'reason': 'Nothing here yet', 'message': sys.exc_info()[0]}
+
+
 
 
 @app.teardown_appcontext
