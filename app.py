@@ -165,7 +165,7 @@ def get_liked(uuid):
     except FileNotFoundError:
         return {'success': False, 'reason': "Session existiert nicht"}
     try:
-        return {"session_complete": True, "liked_items": f['liked_items']}
+        return {"success": True, "liked_items": f['liked_items']}
     except:  # i am sure this is fine...
         return {'success': False, 'reason': 'Nothing here yet', 'message': sys.exc_info()[0]}
 
