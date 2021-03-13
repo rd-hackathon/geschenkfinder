@@ -7,7 +7,6 @@ from uuid import uuid4
 from werkzeug.utils import secure_filename
 
 from parsers.google import parse_html
-from parsers.relaxdays import get_items
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # wir nehmen an, dass die HTML-Datei <16MB ist
@@ -56,6 +55,7 @@ def selection(uuid):
     return f  # todo: return template/overview
 
 
+# dies ist der Endpunkt, der über Javascript für neue Daten abgerufen werden muss
 @app.route('/<uuid>/next', methods=['GET'])
 def get_next(uuid):
     get_items('Ente')
