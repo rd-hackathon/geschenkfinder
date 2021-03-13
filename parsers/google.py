@@ -38,7 +38,7 @@ useable = (
 def parse_html(fh):
     set_categories = set()
     with open(fh, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f.read(), 'lxml')
+        soup = BeautifulSoup(f.read(), "html.parser")
         categories = soup.find('ul')
         for cat in categories.find_all('li'):
             if cat.text.strip() in useable:
