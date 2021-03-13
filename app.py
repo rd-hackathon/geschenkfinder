@@ -1,6 +1,7 @@
 import json
 import os
 import sqlite3
+import sys
 
 from flask import Flask, request, render_template, redirect, url_for, g
 from uuid import uuid4
@@ -66,43 +67,94 @@ def selection(uuid):
         with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
             f = json.load(fh)
     except FileNotFoundError:
-        return "Session existiert nicht"
+        return {'success': False, 'reason': "Session existiert nicht"}
     return f  # todo: return template/overview instead
 
 
 # dies ist der Endpunkt, der über Javascript für neue Daten abgerufen werden muss
 @app.route('/<uuid>/next', methods=['GET'])
 def get_next(uuid):
-    with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
-        f = json.load(fh)
+    try:
+        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+            f = json.load(fh)
+    except FileNotFoundError:
+        return {'success': False, 'reason': "Session existiert nicht"}
     if 'current_category' not in f:
         f['current_category'] = 0
         f['current_product'] = 0
         f['current_turn'] = 1  # wird erhöht, wenn alle Produkte einmal durchlaufen wurden.
         f['category_rating'] = {}
+        f['liked_items'] = []
         for x, cat in enumerate(f['categories']):
             f['category_rating'][x] = 0
+
     c = get_db().cursor()
-    sql = 'SELECT * FROM "{}" WHERE id>={} AND price<={} LIMIT 1'.format(f['categories'][f['current_category']], f['current_product'], f['max_price'])  # woohooo SQL injektion!
-    print(sql)
-    c.execute(sql)
-    rows = c.fetchall()
-    if len(rows) != 1:  # überspringen, falls nichts gefunden
-        f['current_product'] = 0
-        f['category_rating'][f['current_category']] = -1  # ZIEL: alle Kategorie-Bewertung auf -1 kriegen
-        f['current_category'] += 1
-    else:
-        for r in rows:
-            print(dict(r))  # TODO: hier weiter machen.
+    returndict = "This shouldn't be here"
+    found = False
+    not_found_count = 0
+    while not found and not_found_count <= len(f['categories']):
+        try:
+            sql = 'SELECT * FROM "{}" WHERE id>={} AND price<={} LIMIT 1'.format(f['categories'][f['current_category']], f['current_product'], f['max_price'])  # woohooo SQL injektion!
+            print(sql)
+            c.execute(sql)
+        except IndexError:
+            f['current_product'] = 0
+            f['category_rating'][f['current_category']] = -1  # ZIEL: alle Kategorie-Bewertung auf -1 kriegen
+            f['current_category'] += 1
+            not_found_count += 1
+
+        rows = c.fetchall()
+        if len(rows) != 1:  # überspringen, falls nichts gefunden
+            f['current_product'] = 0
+            f['category_rating'][f['current_category']] = -1  # ZIEL: alle Kategorie-Bewertung auf -1 kriegen
+            f['current_category'] += 1
+        else:
+            for r in rows:
+                returndict = dict(r)
+                # del returndict['id']
+                returndict['category'] = f['categories'][f['current_category']]
+                f['last_item'] = returndict
+                f['current_product'] += 1
+                found = True
+
     with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'w') as fh:
         json.dump(f, fh)
-    return str(f)  # TODO: wenn man es ohne cast zurück gibt, schmeißt es hier einen Fehler... Just... why?
+    if not_found_count > len(f['categories']):
+        return {"session_complete": True, "liked_items": {}}  # todo: get it!
+    return returndict
 
 
-# dies ist der Endpunkt, der das Ergebnis
-@app.route('/<uuid>/result/<yesno>', methods=['POST'])
-def submit_result(uuid, yesno):
-    return "somethingelse"
+# dies ist der Endpunkt, der das Ergebnis speichert
+@app.route('/<uuid>/<like>', methods=['POST'])
+def submit_result(uuid, like):
+    try:
+        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+            f = json.load(fh)
+    except FileNotFoundError:
+        return {'success': False, 'reason': "Session existiert nicht"}
+    msg = {'success': False, 'liked': 'Operation illegal: {}'.format(like)}
+    if like == 'like':
+        f['liked_items'].append(f['last_item'])
+        msg = {'success': True, 'liked': True}
+    elif like == 'dislike':
+        msg = {'success': True, 'liked': False}
+    with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'w') as fh:
+        json.dump(f, fh)
+    return msg
+
+
+# mit diesem Endpunkt können aktuelle Artikel abgerufen werden
+@app.route('/<uuid>/liked', methods=['GET'])
+def get_liked(uuid):
+    try:
+        with open(os.path.join(app.config['SESSION_FOLDER'], uuid), 'r') as fh:
+            f = json.load(fh)
+    except FileNotFoundError:
+        return {'success': False, 'reason': "Session existiert nicht"}
+    try:
+        return {"session_complete": True, "liked_items": f['liked_items']}
+    except:  # i am sure this is fine...
+        return {'success': False, 'reason': 'Nothing here yet', 'message': sys.exc_info()[0]}
 
 
 @app.teardown_appcontext

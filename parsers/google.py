@@ -47,4 +47,4 @@ def parse_html(fh):
 
 
 if __name__ == '__main__':
-    print(parse_html('Einstellungen für Werbung2.html'))
+    print(parse_html('user_A.html'))

@@ -5,7 +5,7 @@ This project was created in the Relaxdays Code Challenge Vol. 1. See https://sit
 
 ## How to run this project
 ```bash
-git clone URL ERGÄNZEN
+git clone https://github.com/rd-hackathon/geschenkfinder.git
 cd geschenkfinder
 docker build -t geschenkfinder . && docker run -p 8080:5000 geschenkfinder 
 ```
