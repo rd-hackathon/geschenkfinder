@@ -5,6 +5,8 @@ This project was created in the Relaxdays Code Challenge Vol. 1. See https://sit
 ## Idee
 Mit Google-Daten der zu beschenkenden Person und wahlweise zusätzlich noch mehr Datensätze weiterer Personen werden dort gespeicherte Interessen mit Kategorien von Relaxdays gematched, die dann auf Relaxdays Produkte verweisen. 
 
+Produktvideo: https://youtu.be/F88NI75fDf4
+
 Die Google-Daten sind nicht im offiziellen Export vorhanden, stattdessen wird die Seite mit der personalisierten Werbung gespeichert und von diesem Inspirator verarbeitet: https://adssettings.google.com/authenticated?hl=de
 
 
