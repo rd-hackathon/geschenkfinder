@@ -3,16 +3,16 @@
     <div x-data="results()"
         x-init="getResults()">
         <div class="py-10 text-7xl font-bold text-center mb-10 text-white">
-            Die Top 3 besten Geschenke:
+            Deine Top Geschenke:
         </div>
         <div class="text-center text-white font-semibold text-xl flex flex-row justify-between px-12 flex-wrap">
             <template x-for="result in results" :key="result">
-                <div>
+                <div class="my-6">
                     <img class="w-auto h-auto px-4" x-bind:src="result.image" >
                     <div class="text-xl" x-text="result.name"></div>
                     <div class="text-xl" x-text="result.price + '€'"></div>
-                    <a class=" mt-16 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest"
-                       x-bind:href="result.url">Zur Relaxdays Seite</a>
+                    <a class=" mt-4 py-4 inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-green-400 hover:from-blue-500 to-green-400  border-transparent  rounded-r-lg font-bold text-lg text-white uppercase  tracking-widest"
+                       x-bind:href="result.url">Zur Relaxsays Seite</a>
                 </div>
             </template>
 
